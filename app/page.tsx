@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
+  ArrowLeft,
   BookOpenText,
   Check,
   ChevronRight,
@@ -38,6 +39,7 @@ import {
   characters,
   conditionLabel,
   conditionScore,
+  getGiftDetails,
   isFastestRoute,
   routeColor,
   routes,
@@ -497,9 +499,23 @@ function CharacterSheet({
 
   return (
     <Sheet open={Boolean(character)} onOpenChange={onOpenChange}>
-      <SheetContent className="character-sheet sm:max-w-[560px]" aria-describedby="character-sheet-description">
+      <SheetContent
+        className="character-sheet sm:max-w-[560px]"
+        aria-describedby="character-sheet-description"
+        showCloseButton={false}
+      >
         {character && (
           <>
+            <Button
+              type="button"
+              variant="ghost"
+              className="sheet-back-button"
+              onClick={() => onOpenChange(false)}
+            >
+              <ArrowLeft aria-hidden="true" />
+              返回角色列表
+            </Button>
+
             <SheetHeader className="sheet-hero">
               <div className="sheet-monogram" aria-hidden="true">{character.name.slice(0, 1)}</div>
               <div>
@@ -546,9 +562,29 @@ function CharacterSheet({
 
               {character.gifts?.length ? (
                 <section className="detail-section">
-                  <div className="detail-heading"><Gift /><h3>最喜欢的礼物</h3></div>
+                  <div className="detail-heading"><Gift /><h3>最喜欢的具体礼物</h3></div>
+                  <p className="gift-note">优先显示简体中文译名，并保留日文原名方便核对；带箭头的礼物可打开物品资料页。</p>
                   <div className="gift-list">
-                    {character.gifts.map((gift) => <span key={gift}>{gift}</span>)}
+                    {character.gifts.map((gift) => {
+                      const details = getGiftDetails(gift);
+                      const content = (
+                        <>
+                          <span>
+                            <strong>{details.name}</strong>
+                            {details.ja && <small>{details.ja}</small>}
+                          </span>
+                          {details.url && <ExternalLink aria-hidden="true" />}
+                        </>
+                      );
+
+                      return details.url ? (
+                        <a key={gift} className="gift-card" href={details.url} target="_blank" rel="noreferrer">
+                          {content}
+                        </a>
+                      ) : (
+                        <div key={gift} className="gift-card">{content}</div>
+                      );
+                    })}
                   </div>
                 </section>
               ) : null}

@@ -24,6 +24,12 @@ export type Character = {
   routes: Record<RouteKey, RouteCondition>;
 };
 
+export type GiftDetails = {
+  name: string;
+  ja?: string;
+  url?: string;
+};
+
 export const routes: Array<{ key: RouteKey; name: string; note: string }> = [
   { key: "cai", name: "凯伊线", note: "蓝狮鹫" },
   { key: "dietrich", name: "迪托利希线", note: "紫鸦" },
@@ -50,7 +56,153 @@ const recruit = (renown: number, support: number, extra?: string, timing?: strin
 const unavailable = (): RouteCondition => ({ status: "unavailable" });
 const later = (timing: string, extra?: string): RouteCondition => ({ status: "later", timing, extra });
 
-export const characters: Character[] = [
+const giftCatalog: Record<string, Omit<GiftDetails, "ja">> = {
+  "薄いセルビ": { name: "淡味赛尔维", url: "https://gamewith.jp/fefw/578092" },
+  "刺激的なゴーシュ": { name: "活力戈什", url: "https://gamewith.jp/fefw/578102" },
+  "村の素朴な料理集": { name: "乡村食谱", url: "https://gamewith.jp/fefw/578114" },
+  "大粒のテフ": { name: "精选咖啡", url: "https://gamewith.jp/fefw/578110" },
+  "淡い色の画材": { name: "粉彩颜料套装", url: "https://gamewith.jp/fefw/578130" },
+  "東方恋愛見聞録": { name: "东方爱情故事" },
+  "東方の耳飾り": { name: "东方耳饰", url: "https://gamewith.jp/fefw/578153" },
+  "東方の盤上遊戯": { name: "东方桌游", url: "https://gamewith.jp/fefw/578136" },
+  "東方の最高級茶葉": { name: "东方茶叶" },
+  "闘技場物語の写本": { name: "斗技场谭", url: "https://gamewith.jp/fefw/578156" },
+  "鍛錬用の装飾腕輪": { name: "训练手环", url: "https://gamewith.jp/fefw/578145" },
+  "盾たちの肖像画": { name: "盾之肖像画", url: "https://gamewith.jp/fefw/578161" },
+  "二振りの魚包丁": { name: "双鱼刀", url: "https://gamewith.jp/fefw/578126" },
+  "芳醇なソウシュ": { name: "芳香肖什", url: "https://gamewith.jp/fefw/578108" },
+  "翡翠色のゴーシュ": { name: "翡翠戈什", url: "https://gamewith.jp/fefw/578100" },
+  "風裂きの矢羽根": { name: "翼羽箭翎", url: "https://gamewith.jp/fefw/578127" },
+  "蜂蜜入りの乳": { name: "蜂蜜奶", url: "https://gamewith.jp/fefw/578088" },
+  "高級八卦占い道具": { name: "占卜八卦" },
+  "関節保護用長手袋": { name: "护腕手套", url: "https://gamewith.jp/fefw/578164" },
+  "海の向こうの古書": { name: "厚重异国典籍", url: "https://gamewith.jp/fefw/578159" },
+  "黒檀の盤上遊戯": { name: "黑檀桌游", url: "https://gamewith.jp/fefw/578166" },
+  "火の山のゴーシュ": { name: "火山戈什", url: "https://gamewith.jp/fefw/578144" },
+  "家庭料理大全": { name: "家常菜谱", url: "https://gamewith.jp/fefw/578117" },
+  "教職員事件簿": { name: "教职员事件簿" },
+  "精霊の盤上遊戯": { name: "精灵桌游", url: "https://gamewith.jp/fefw/578129" },
+  "巨大魚の目玉": { name: "巨型鱼眼", url: "https://gamewith.jp/fefw/578162" },
+  "軍略書の写本": { name: "兵法手稿", url: "https://gamewith.jp/fefw/578125" },
+  "旅の老師の口伝録": { name: "旅者导师口述录", url: "https://gamewith.jp/fefw/578152" },
+  "馬のお手入れ道具": { name: "马匹护理套装", url: "https://gamewith.jp/fefw/578121" },
+  "貿易取引入門": { name: "商人手册", url: "https://gamewith.jp/fefw/578155" },
+  "美しい飾り矢": { name: "装饰箭", url: "https://gamewith.jp/fefw/578138" },
+  "秘伝のゴーシュ": { name: "秘传戈什", url: "https://gamewith.jp/fefw/578150" },
+  "南方の薫るテフ": { name: "南方咖啡", url: "https://gamewith.jp/fefw/578111" },
+  "南方のゴーシュ": { name: "南方戈什", url: "https://gamewith.jp/fefw/578104" },
+  "南洋冒険奇譚": { name: "冒险谭", url: "https://gamewith.jp/fefw/578151" },
+  "濃厚なガルム": { name: "浓醇鱼酱", url: "https://gamewith.jp/fefw/578163" },
+  "濃いセルビ": { name: "浓醇赛尔维", url: "https://gamewith.jp/fefw/578094" },
+  "女騎士と求婚者": { name: "女骑士与求婚者", url: "https://gamewith.jp/fefw/578124" },
+  "派手すぎる腕輪": { name: "华丽手镯", url: "https://gamewith.jp/fefw/578146" },
+  "派手で美しい指輪": { name: "精美戒指", url: "https://gamewith.jp/fefw/578132" },
+  "球根の酢漬け": { name: "腌球茎" },
+  "栄養満点お菓子本": { name: "糕点食谱", url: "https://gamewith.jp/fefw/578113" },
+  "鋭い釣り針": { name: "锋利鱼钩", url: "https://gamewith.jp/fefw/578120" },
+  "鋭く小さな短剣": { name: "锋利小短剑", url: "https://gamewith.jp/fefw/578154" },
+  "若いゴーシュ": { name: "新酿戈什", url: "https://gamewith.jp/fefw/578098" },
+  "若いソウシュ": { name: "新酿肖什", url: "https://gamewith.jp/fefw/578105" },
+  "少し甘い焼き菓子": { name: "醇香糕点", url: "https://gamewith.jp/fefw/578095" },
+  "実験的な裁縫道具": { name: "实验性裁缝工具" },
+  "実用的な裁縫道具": { name: "全套针线包", url: "https://gamewith.jp/fefw/578128" },
+  "世界の名詩集": { name: "名家诗集", url: "https://gamewith.jp/fefw/578160" },
+  "熟成干しセルビ": { name: "陈制赛尔维干", url: "https://gamewith.jp/fefw/578143" },
+  "熟成ゴーシュ": { name: "陈酿戈什", url: "https://gamewith.jp/fefw/578099" },
+  "熟成ソウシュ": { name: "陈酿肖什", url: "https://gamewith.jp/fefw/578107" },
+  "庶民百景": { name: "日常风景" },
+  "素朴な焼き菓子": { name: "朴素糕点", url: "https://gamewith.jp/fefw/578090" },
+  "素朴なゴーシュ": { name: "乡野戈什", url: "https://gamewith.jp/fefw/578101" },
+  "太陽のゴーシュ": { name: "阳光戈什", url: "https://gamewith.jp/fefw/578103" },
+  "天露水": { name: "护肤香膏", url: "https://gamewith.jp/fefw/578131" },
+  "味わい深い調味料": { name: "浓烈调味料", url: "https://gamewith.jp/fefw/578133" },
+  "武術訓練用の重り": { name: "训练负重" },
+  "香ばしい焼き菓子": { name: "芬芳糕点", url: "https://gamewith.jp/fefw/578148" },
+  "小粒のテフ": { name: "普通咖啡", url: "https://gamewith.jp/fefw/578109" },
+  "薬草料理大全": { name: "药膳食谱指南", url: "https://gamewith.jp/fefw/578134" },
+  "野菜の鉢植え": { name: "盆栽蔬菜", url: "https://gamewith.jp/fefw/578112" },
+  "野菜の酢漬け": { name: "醋渍蔬菜" },
+  "野菜の瓶漬け": { name: "瓶装腌菜" },
+  "野外調理道具": { name: "户外炊具套装", url: "https://gamewith.jp/fefw/578140" },
+  "儀礼用の鋭い槍": { name: "仪式长枪", url: "https://gamewith.jp/fefw/578157" },
+  "珍しい香辛料": { name: "珍稀香料", url: "https://gamewith.jp/fefw/578116" },
+  "真紅のゴーシュ": { name: "绯红戈什", url: "https://gamewith.jp/fefw/578149" },
+  "軽妙なソウシュ": { name: "淡爽肖什", url: "https://gamewith.jp/fefw/578106" },
+  "髭飾り": { name: "鬃毛饰件" },
+  "子猫の置物": { name: "小猫摆件" },
+  "アレクトーガルム": { name: "阿勒克托鱼酱", url: "https://gamewith.jp/fefw/578167" },
+  "オーガスのテフ": { name: "奥尔古斯咖啡" },
+  "ガルム": { name: "鱼酱", url: "https://gamewith.jp/fefw/578096" },
+  "ギンジ入りセルビ": { name: "银次赛尔维", url: "https://gamewith.jp/fefw/578093" },
+  "サラミスの菓子": { name: "萨拉米斯甜点", url: "https://gamewith.jp/fefw/578137" },
+  "しなやかな釣り竿": { name: "柔韧钓竿", url: "https://gamewith.jp/fefw/578119" },
+  "ジャーメルの乳": { name: "贾梅尔奶", url: "https://gamewith.jp/fefw/578089" },
+  "ダグザヒゲシバ": { name: "达格达须草", url: "https://gamewith.jp/fefw/578122" },
+  "ダンテ戯曲全集": { name: "但丁作品集", url: "https://gamewith.jp/fefw/578123" },
+  "テフ入り焼き菓子": { name: "咖啡糕点", url: "https://gamewith.jp/fefw/578142" },
+  "ニーザ産ガルム": { name: "尼扎鱼酱", url: "https://gamewith.jp/fefw/578097" },
+  "ペガサスの風景画": { name: "天马风景画", url: "https://gamewith.jp/fefw/578141" },
+  "モルフィス歳時記": { name: "摩尔菲斯岁时记", url: "https://gamewith.jp/fefw/578158" },
+  "モルフィスの紅茶": { name: "莫尔菲斯红茶", url: "https://gamewith.jp/fefw/578147" },
+  "ヤクの乳": { name: "亚克奶", url: "https://gamewith.jp/fefw/578091" },
+  "ユ・ファスの肖像": { name: "尤法斯肖像画" },
+  "よく切れる彫刻刀": { name: "手工刻刀", url: "https://gamewith.jp/fefw/578135" },
+};
+
+const favoriteGiftsByCharacter: Record<string, string[]> = {
+  cai: ["ダグザヒゲシバ", "馬のお手入れ道具", "髭飾り", "鍛錬用の装飾腕輪", "軍略書の写本", "儀礼用の鋭い槍"],
+  tialla: ["ダンテ戯曲全集", "南洋冒険奇譚", "女騎士と求婚者", "貿易取引入門", "闘技場物語の写本", "海の向こうの古書", "ガルム", "東方の盤上遊戯", "黒檀の盤上遊戯", "精霊の盤上遊戯", "薄いセルビ", "濃いセルビ", "ギンジ入りセルビ", "熟成干しセルビ"],
+  peter: ["少し甘い焼き菓子", "ギンジ入りセルビ", "サラミスの菓子", "栄養満点お菓子本", "香ばしい焼き菓子", "蜂蜜入りの乳", "薬草料理大全", "二振りの魚包丁", "ニーザ産ガルム", "アレクトーガルム", "ガルム", "濃厚なガルム", "南洋冒険奇譚"],
+  ultand: ["ガルム", "濃厚なガルム", "ニーザ産ガルム", "二振りの魚包丁", "味わい深い調味料", "薬草料理大全", "家庭料理大全", "野外調理道具", "村の素朴な料理集", "南洋冒険奇譚", "女騎士と求婚者", "世界の名詩集"],
+  goliath: ["若いゴーシュ", "太陽のゴーシュ", "熟成ゴーシュ", "刺激的なゴーシュ", "素朴なゴーシュ", "翡翠色のゴーシュ", "南方のゴーシュ", "火の山のゴーシュ", "精霊の盤上遊戯", "東方の盤上遊戯"],
+  dante: ["小粒のテフ", "大粒のテフ", "南方の薫るテフ", "ダンテ戯曲全集", "女騎士と求婚者", "旅の老師の口伝録", "貿易取引入門"],
+  dietrich: ["素朴な焼き菓子", "少し甘い焼き菓子", "香ばしい焼き菓子", "ギンジ入りセルビ", "ペガサスの風景画", "盾たちの肖像画", "テフ入り焼き菓子"],
+  fabio: ["小粒のテフ", "大粒のテフ", "オーガスのテフ", "南方の薫るテフ", "テフ入り焼き菓子"],
+  esmeralda: ["鋭い釣り針", "しなやかな釣り竿", "少し甘い焼き菓子", "素朴な焼き菓子", "香ばしい焼き菓子", "ギンジ入りセルビ", "巨大魚の目玉", "テフ入り焼き菓子"],
+  mikaela: ["小粒のテフ", "大粒のテフ", "南方の薫るテフ", "軽妙なソウシュ", "テフ入り焼き菓子"],
+  orchel: ["ダンテ戯曲全集"],
+  loretta: ["少し甘い焼き菓子", "素朴な焼き菓子", "サラミスの菓子", "香ばしい焼き菓子", "テフ入り焼き菓子"],
+  ninae: ["ユ・ファスの肖像"],
+  theodora: ["ペガサスの風景画", "儀礼用の鋭い槍", "ユ・ファスの肖像"],
+  bonaventure: ["旅の老師の口伝録", "南洋冒険奇譚", "モルフィス歳時記", "海の向こうの古書", "女騎士と求婚者", "世界の名詩集"],
+  tobias: ["太陽のゴーシュ", "若いゴーシュ", "熟成ゴーシュ", "翡翠色のゴーシュ", "刺激的なゴーシュ", "素朴なゴーシュ", "秘伝のゴーシュ", "南方のゴーシュ", "火の山のゴーシュ", "真紅のゴーシュ", "若いソウシュ", "熟成ソウシュ", "軽妙なソウシュ", "芳醇なソウシュ", "旅の老師の口伝録"],
+  lilian: ["東方の耳飾り", "派手すぎる腕輪", "天露水", "実験的な裁縫道具", "珍しい香辛料", "美しい飾り矢"],
+  lysander: ["武術訓練用の重り", "鋭く小さな短剣", "儀礼用の鋭い槍"],
+  talimun: ["小粒のテフ", "大粒のテフ", "オーガスのテフ", "芳醇なソウシュ", "軽妙なソウシュ", "熟成ソウシュ", "若いソウシュ", "秘伝のゴーシュ", "南方のゴーシュ", "火の山のゴーシュ", "翡翠色のゴーシュ", "素朴なゴーシュ", "刺激的なゴーシュ", "太陽のゴーシュ", "熟成ゴーシュ", "若いゴーシュ", "真紅のゴーシュ", "女騎士と求婚者", "南洋冒険奇譚", "東方の盤上遊戯", "精霊の盤上遊戯", "黒檀の盤上遊戯", "テフ入り焼き菓子"],
+  ursula: ["小粒のテフ", "大粒のテフ", "南方の薫るテフ", "オーガスのテフ", "南洋冒険奇譚", "テフ入り焼き菓子", "東方の盤上遊戯"],
+  ludia: ["小粒のテフ", "大粒のテフ", "南方の薫るテフ", "オーガスのテフ", "庶民百景", "ダンテ戯曲全集", "女騎士と求婚者", "貿易取引入門", "闘技場物語の写本", "よく切れる彫刻刀", "淡い色の画材"],
+  fianna: ["小粒のテフ", "大粒のテフ", "南方の薫るテフ", "テフ入り焼き菓子", "旅の老師の口伝録", "モルフィスの紅茶", "東方の最高級茶葉"],
+  leda: ["派手すぎる腕輪", "東方の耳飾り", "派手で美しい指輪", "天露水", "実用的な裁縫道具", "ユ・ファスの肖像"],
+  buccar: ["若いゴーシュ", "熟成ゴーシュ", "太陽のゴーシュ", "翡翠色のゴーシュ", "鋭く小さな短剣", "儀礼用の鋭い槍"],
+  sirocco: ["若いゴーシュ", "熟成ゴーシュ", "太陽のゴーシュ", "刺激的なゴーシュ", "素朴なゴーシュ", "翡翠色のゴーシュ", "南方のゴーシュ", "火の山のゴーシュ", "秘伝のゴーシュ", "真紅のゴーシュ", "若いソウシュ", "熟成ソウシュ", "軽妙なソウシュ", "芳醇なソウシュ", "ペガサスの風景画", "女騎士と求婚者", "南洋冒険奇譚", "ユ・ファスの肖像"],
+  olympia: ["オーガスのテフ"],
+  mu: ["小粒のテフ", "大粒のテフ", "南方の薫るテフ", "オーガスのテフ", "素朴な焼き菓子", "少し甘い焼き菓子", "サラミスの菓子", "香ばしい焼き菓子", "テフ入り焼き菓子"],
+  anatolia: ["南洋冒険奇譚", "高級八卦占い道具", "儀礼用の鋭い槍"],
+  nezha: ["野菜の鉢植え", "球根の酢漬け", "野菜の瓶漬け", "東方の盤上遊戯"],
+  dadao: ["真紅のゴーシュ", "ヤクの乳", "蜂蜜入りの乳", "ジャーメルの乳", "薄いセルビ", "濃いセルビ", "熟成干しセルビ", "ギンジ入りセルビ", "素朴な焼き菓子"],
+  halvin: ["ガルム", "ニーザ産ガルム", "野菜の鉢植え", "野菜の酢漬け"],
+  guzran: ["若いゴーシュ", "熟成ゴーシュ", "太陽のゴーシュ", "刺激的なゴーシュ", "素朴なゴーシュ", "翡翠色のゴーシュ", "南方のゴーシュ", "火の山のゴーシュ", "若いソウシュ", "熟成ソウシュ", "芳醇なソウシュ"],
+  io: ["馬のお手入れ道具", "ダグザヒゲシバ", "髭飾り"],
+  peppe: ["小粒のテフ", "大粒のテフ", "南方の薫るテフ", "オーガスのテフ", "南洋冒険奇譚", "教職員事件簿", "闘技場物語の写本", "貿易取引入門", "女騎士と求婚者", "庶民百景", "テフ入り焼き菓子", "栄養満点お菓子本", "薬草料理大全", "ユ・ファスの肖像", "盾たちの肖像画", "ペガサスの風景画"],
+  noctula: ["鍛錬用の装飾腕輪", "武術訓練用の重り", "軍略書の写本", "儀礼用の鋭い槍", "鋭く小さな短剣"],
+  sofia: ["ニーザ産ガルム", "ガルム", "濃厚なガルム", "アレクトーガルム", "薬草料理大全", "二振りの魚包丁", "味わい深い調味料", "野外調理道具", "村の素朴な料理集", "ジャーメルの乳", "ヤクの乳", "濃いセルビ", "薄いセルビ", "熟成干しセルビ", "蜂蜜入りの乳", "ギンジ入りセルビ", "少し甘い焼き菓子", "素朴な焼き菓子", "香ばしい焼き菓子", "サラミスの菓子", "栄養満点お菓子本", "南方の薫るテフ", "大粒のテフ", "小粒のテフ", "オーガスのテフ", "テフ入り焼き菓子", "珍しい香辛料"],
+  catania: ["小粒のテフ", "大粒のテフ", "オーガスのテフ", "盾たちの肖像画", "ペガサスの風景画", "よく切れる彫刻刀", "ユ・ファスの肖像"],
+  nydine: ["風裂きの矢羽根"],
+  majide: ["若いゴーシュ", "熟成ゴーシュ", "太陽のゴーシュ", "刺激的なゴーシュ", "素朴なゴーシュ", "翡翠色のゴーシュ", "南方のゴーシュ", "火の山のゴーシュ", "真紅のゴーシュ", "若いソウシュ", "熟成ソウシュ", "軽妙なソウシュ", "芳醇なソウシュ"],
+  benditz: ["精霊の盤上遊戯", "東方の盤上遊戯", "軍略書の写本", "南洋冒険奇譚", "儀礼用の鋭い槍"],
+  inyoni: ["美しい飾り矢", "関節保護用長手袋", "風裂きの矢羽根", "しなやかな釣り竿", "鋭い釣り針"],
+  alexandra: ["馬のお手入れ道具", "髭飾り", "ダグザヒゲシバ", "ペガサスの風景画"],
+  nuzzuo: ["ガルム"],
+  honghua: ["小粒のテフ", "大粒のテフ"],
+  troy: ["子猫の置物"],
+};
+
+export function getGiftDetails(gift: string): GiftDetails {
+  const details = giftCatalog[gift];
+  return details ? { ...details, ja: gift } : { name: gift };
+}
+
+const baseCharacters: Character[] = [
   {
     id: "cai", name: "凯伊", ja: "カイ", tier: 1, role: "近战主力",
     gifts: ["马具类礼物", "锻炼类礼物", "仪式用锋利长枪"],
@@ -374,6 +526,11 @@ export const characters: Character[] = [
     routes: { cai: later("第三部·救世篇第6区分", "第5区分作为客军时不能阵亡"), dietrich: later("第三部·救世篇第6区分", "第5区分作为客军时不能阵亡"), theodora: later("第三部·救世篇第6区分", "第5区分作为客军时不能阵亡"), leda: later("第三部·救世篇第6区分", "第5区分作为客军时不能阵亡") },
   },
 ];
+
+export const characters: Character[] = baseCharacters.map((character) => ({
+  ...character,
+  gifts: favoriteGiftsByCharacter[character.id] ?? character.gifts,
+}));
 
 export const sources = {
   official: "https://www.nintendo.com/tw/topics/article/3feXfpwDoBpKurVdEuTygE",
