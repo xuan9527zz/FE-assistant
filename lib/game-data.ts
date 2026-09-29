@@ -18,6 +18,7 @@ export type Character = {
   role?: string;
   recommendedClass?: string;
   classPath?: string;
+  sourceUrl?: string;
   gifts?: string[];
   likes?: string[];
   dislikes?: string[];
@@ -65,7 +66,7 @@ const giftCatalog: Record<string, Omit<GiftDetails, "ja">> = {
   "東方恋愛見聞録": { name: "东方爱情故事" },
   "東方の耳飾り": { name: "东方耳饰", url: "https://gamewith.jp/fefw/578153" },
   "東方の盤上遊戯": { name: "东方桌游", url: "https://gamewith.jp/fefw/578136" },
-  "東方の最高級茶葉": { name: "东方茶叶" },
+  "東方の最高級茶葉": { name: "东方茶叶", url: "https://gamewith.jp/fefw/578694" },
   "闘技場物語の写本": { name: "斗技场谭", url: "https://gamewith.jp/fefw/578156" },
   "鍛錬用の装飾腕輪": { name: "训练手环", url: "https://gamewith.jp/fefw/578145" },
   "盾たちの肖像画": { name: "盾之肖像画", url: "https://gamewith.jp/fefw/578161" },
@@ -97,7 +98,7 @@ const giftCatalog: Record<string, Omit<GiftDetails, "ja">> = {
   "女騎士と求婚者": { name: "女骑士与求婚者", url: "https://gamewith.jp/fefw/578124" },
   "派手すぎる腕輪": { name: "华丽手镯", url: "https://gamewith.jp/fefw/578146" },
   "派手で美しい指輪": { name: "精美戒指", url: "https://gamewith.jp/fefw/578132" },
-  "球根の酢漬け": { name: "腌球茎" },
+  "球根の酢漬け": { name: "腌球茎", url: "https://gamewith.jp/fefw/578689" },
   "栄養満点お菓子本": { name: "糕点食谱", url: "https://gamewith.jp/fefw/578113" },
   "鋭い釣り針": { name: "锋利鱼钩", url: "https://gamewith.jp/fefw/578120" },
   "鋭く小さな短剣": { name: "锋利小短剑", url: "https://gamewith.jp/fefw/578154" },
@@ -116,13 +117,13 @@ const giftCatalog: Record<string, Omit<GiftDetails, "ja">> = {
   "太陽のゴーシュ": { name: "阳光戈什", url: "https://gamewith.jp/fefw/578103" },
   "天露水": { name: "护肤香膏", url: "https://gamewith.jp/fefw/578131" },
   "味わい深い調味料": { name: "浓烈调味料", url: "https://gamewith.jp/fefw/578133" },
-  "武術訓練用の重り": { name: "训练负重" },
+  "武術訓練用の重り": { name: "训练负重", url: "https://gamewith.jp/fefw/578692" },
   "香ばしい焼き菓子": { name: "芬芳糕点", url: "https://gamewith.jp/fefw/578148" },
   "小粒のテフ": { name: "普通咖啡", url: "https://gamewith.jp/fefw/578109" },
   "薬草料理大全": { name: "药膳食谱指南", url: "https://gamewith.jp/fefw/578134" },
   "野菜の鉢植え": { name: "盆栽蔬菜", url: "https://gamewith.jp/fefw/578112" },
   "野菜の酢漬け": { name: "醋渍蔬菜" },
-  "野菜の瓶漬け": { name: "瓶装腌菜" },
+  "野菜の瓶漬け": { name: "瓶装腌菜", url: "https://gamewith.jp/fefw/578690" },
   "野外調理道具": { name: "户外炊具套装", url: "https://gamewith.jp/fefw/578140" },
   "儀礼用の鋭い槍": { name: "仪式长枪", url: "https://gamewith.jp/fefw/578157" },
   "珍しい香辛料": { name: "珍稀香料", url: "https://gamewith.jp/fefw/578116" },
@@ -131,7 +132,7 @@ const giftCatalog: Record<string, Omit<GiftDetails, "ja">> = {
   "髭飾り": { name: "鬃毛饰件" },
   "子猫の置物": { name: "小猫摆件" },
   "アレクトーガルム": { name: "阿勒克托鱼酱", url: "https://gamewith.jp/fefw/578167" },
-  "オーガスのテフ": { name: "奥尔古斯咖啡" },
+  "オーガスのテフ": { name: "奥尔古斯咖啡", url: "https://gamewith.jp/fefw/578693" },
   "ガルム": { name: "鱼酱", url: "https://gamewith.jp/fefw/578096" },
   "ギンジ入りセルビ": { name: "银次赛尔维", url: "https://gamewith.jp/fefw/578093" },
   "サラミスの菓子": { name: "萨拉米斯甜点", url: "https://gamewith.jp/fefw/578137" },
@@ -147,6 +148,7 @@ const giftCatalog: Record<string, Omit<GiftDetails, "ja">> = {
   "ヤクの乳": { name: "亚克奶", url: "https://gamewith.jp/fefw/578091" },
   "ユ・ファスの肖像": { name: "尤法斯肖像画" },
   "よく切れる彫刻刀": { name: "手工刻刀", url: "https://gamewith.jp/fefw/578135" },
+  "鬣飾り": { name: "鬃毛饰件", url: "https://gamewith.jp/fefw/578691" },
 };
 
 const favoriteGiftsByCharacter: Record<string, string[]> = {
@@ -154,6 +156,7 @@ const favoriteGiftsByCharacter: Record<string, string[]> = {
   tialla: ["ダンテ戯曲全集", "南洋冒険奇譚", "女騎士と求婚者", "貿易取引入門", "闘技場物語の写本", "海の向こうの古書", "ガルム", "東方の盤上遊戯", "黒檀の盤上遊戯", "精霊の盤上遊戯", "薄いセルビ", "濃いセルビ", "ギンジ入りセルビ", "熟成干しセルビ"],
   peter: ["少し甘い焼き菓子", "ギンジ入りセルビ", "サラミスの菓子", "栄養満点お菓子本", "香ばしい焼き菓子", "蜂蜜入りの乳", "薬草料理大全", "二振りの魚包丁", "ニーザ産ガルム", "アレクトーガルム", "ガルム", "濃厚なガルム", "南洋冒険奇譚"],
   ultand: ["ガルム", "濃厚なガルム", "ニーザ産ガルム", "二振りの魚包丁", "味わい深い調味料", "薬草料理大全", "家庭料理大全", "野外調理道具", "村の素朴な料理集", "南洋冒険奇譚", "女騎士と求婚者", "世界の名詩集"],
+  gaitz: ["小粒のテフ", "大粒のテフ", "南方の薫るテフ", "馬のお手入れ道具", "ダグザヒゲシバ", "髭飾り", "テフ入り焼き菓子", "鋭く小さな短剣", "儀礼用の鋭い槍", "東方の最高級茶葉"],
   goliath: ["若いゴーシュ", "太陽のゴーシュ", "熟成ゴーシュ", "刺激的なゴーシュ", "素朴なゴーシュ", "翡翠色のゴーシュ", "南方のゴーシュ", "火の山のゴーシュ", "精霊の盤上遊戯", "東方の盤上遊戯"],
   dante: ["小粒のテフ", "大粒のテフ", "南方の薫るテフ", "ダンテ戯曲全集", "女騎士と求婚者", "旅の老師の口伝録", "貿易取引入門"],
   dietrich: ["素朴な焼き菓子", "少し甘い焼き菓子", "香ばしい焼き菓子", "ギンジ入りセルビ", "ペガサスの風景画", "盾たちの肖像画", "テフ入り焼き菓子"],
@@ -175,26 +178,97 @@ const favoriteGiftsByCharacter: Record<string, string[]> = {
   leda: ["派手すぎる腕輪", "東方の耳飾り", "派手で美しい指輪", "天露水", "実用的な裁縫道具", "ユ・ファスの肖像"],
   buccar: ["若いゴーシュ", "熟成ゴーシュ", "太陽のゴーシュ", "翡翠色のゴーシュ", "鋭く小さな短剣", "儀礼用の鋭い槍"],
   sirocco: ["若いゴーシュ", "熟成ゴーシュ", "太陽のゴーシュ", "刺激的なゴーシュ", "素朴なゴーシュ", "翡翠色のゴーシュ", "南方のゴーシュ", "火の山のゴーシュ", "秘伝のゴーシュ", "真紅のゴーシュ", "若いソウシュ", "熟成ソウシュ", "軽妙なソウシュ", "芳醇なソウシュ", "ペガサスの風景画", "女騎士と求婚者", "南洋冒険奇譚", "ユ・ファスの肖像"],
-  olympia: ["オーガスのテフ"],
+  olympia: ["オーガスのテフ", "小粒のテフ", "大粒のテフ", "南方の薫るテフ", "盾たちの肖像画", "天露水", "実用的な裁縫道具", "東方の耳飾り", "派手すぎる腕輪", "派手で美しい指輪", "ユ・ファスの肖像", "東方の盤上遊戯", "テフ入り焼き菓子"],
   mu: ["小粒のテフ", "大粒のテフ", "南方の薫るテフ", "オーガスのテフ", "素朴な焼き菓子", "少し甘い焼き菓子", "サラミスの菓子", "香ばしい焼き菓子", "テフ入り焼き菓子"],
   anatolia: ["南洋冒険奇譚", "高級八卦占い道具", "儀礼用の鋭い槍"],
   nezha: ["野菜の鉢植え", "球根の酢漬け", "野菜の瓶漬け", "東方の盤上遊戯"],
+  shalan: ["薬草料理大全", "ガルム", "ニーザ産ガルム", "アレクトーガルム", "濃厚なガルム", "村の素朴な料理集", "二振りの魚包丁", "味わい深い調味料", "家庭料理大全", "栄養満点お菓子本", "東方の最高級茶葉"],
   dadao: ["真紅のゴーシュ", "ヤクの乳", "蜂蜜入りの乳", "ジャーメルの乳", "薄いセルビ", "濃いセルビ", "熟成干しセルビ", "ギンジ入りセルビ", "素朴な焼き菓子"],
-  halvin: ["ガルム", "ニーザ産ガルム", "野菜の鉢植え", "野菜の酢漬け"],
+  halvin: ["ガルム", "ニーザ産ガルム", "野菜の鉢植え", "野菜の酢漬け", "球根の酢漬け"],
   guzran: ["若いゴーシュ", "熟成ゴーシュ", "太陽のゴーシュ", "刺激的なゴーシュ", "素朴なゴーシュ", "翡翠色のゴーシュ", "南方のゴーシュ", "火の山のゴーシュ", "若いソウシュ", "熟成ソウシュ", "芳醇なソウシュ"],
+  yangjie: ["若いゴーシュ", "熟成ゴーシュ", "太陽のゴーシュ", "刺激的なゴーシュ", "素朴なゴーシュ", "翡翠色のゴーシュ", "南方のゴーシュ", "真紅のゴーシュ", "秘伝のゴーシュ", "若いソウシュ", "熟成ソウシュ", "軽妙なソウシュ", "芳醇なソウシュ", "火の山のゴーシュ", "ダンテ戯曲全集", "女騎士と求婚者", "東方恋愛見聞録", "南洋冒険奇譚", "闘技場物語の写本", "教職員事件簿", "精霊の盤上遊戯", "東方の盤上遊戯"],
   io: ["馬のお手入れ道具", "ダグザヒゲシバ", "髭飾り"],
   peppe: ["小粒のテフ", "大粒のテフ", "南方の薫るテフ", "オーガスのテフ", "南洋冒険奇譚", "教職員事件簿", "闘技場物語の写本", "貿易取引入門", "女騎士と求婚者", "庶民百景", "テフ入り焼き菓子", "栄養満点お菓子本", "薬草料理大全", "ユ・ファスの肖像", "盾たちの肖像画", "ペガサスの風景画"],
   noctula: ["鍛錬用の装飾腕輪", "武術訓練用の重り", "軍略書の写本", "儀礼用の鋭い槍", "鋭く小さな短剣"],
-  sofia: ["ニーザ産ガルム", "ガルム", "濃厚なガルム", "アレクトーガルム", "薬草料理大全", "二振りの魚包丁", "味わい深い調味料", "野外調理道具", "村の素朴な料理集", "ジャーメルの乳", "ヤクの乳", "濃いセルビ", "薄いセルビ", "熟成干しセルビ", "蜂蜜入りの乳", "ギンジ入りセルビ", "少し甘い焼き菓子", "素朴な焼き菓子", "香ばしい焼き菓子", "サラミスの菓子", "栄養満点お菓子本", "南方の薫るテフ", "大粒のテフ", "小粒のテフ", "オーガスのテフ", "テフ入り焼き菓子", "珍しい香辛料"],
+  sofia: ["ニーザ産ガルム", "ガルム", "濃厚なガルム", "アレクトーガルム", "薬草料理大全", "二振りの魚包丁", "味わい深い調味料", "野外調理道具", "村の素朴な料理集", "家庭料理大全", "ジャーメルの乳", "ヤクの乳", "濃いセルビ", "薄いセルビ", "熟成干しセルビ", "蜂蜜入りの乳", "ギンジ入りセルビ", "少し甘い焼き菓子", "素朴な焼き菓子", "香ばしい焼き菓子", "サラミスの菓子", "栄養満点お菓子本", "南方の薫るテフ", "大粒のテフ", "小粒のテフ", "オーガスのテフ", "テフ入り焼き菓子", "珍しい香辛料"],
   catania: ["小粒のテフ", "大粒のテフ", "オーガスのテフ", "盾たちの肖像画", "ペガサスの風景画", "よく切れる彫刻刀", "ユ・ファスの肖像"],
-  nydine: ["風裂きの矢羽根"],
+  nydine: ["風裂きの矢羽根", "関節保護用長手袋", "盾たちの肖像画", "ペガサスの風景画", "南洋冒険奇譚", "ユ・ファスの肖像", "鬣飾り"],
   majide: ["若いゴーシュ", "熟成ゴーシュ", "太陽のゴーシュ", "刺激的なゴーシュ", "素朴なゴーシュ", "翡翠色のゴーシュ", "南方のゴーシュ", "火の山のゴーシュ", "真紅のゴーシュ", "若いソウシュ", "熟成ソウシュ", "軽妙なソウシュ", "芳醇なソウシュ"],
   benditz: ["精霊の盤上遊戯", "東方の盤上遊戯", "軍略書の写本", "南洋冒険奇譚", "儀礼用の鋭い槍"],
   inyoni: ["美しい飾り矢", "関節保護用長手袋", "風裂きの矢羽根", "しなやかな釣り竿", "鋭い釣り針"],
   alexandra: ["馬のお手入れ道具", "髭飾り", "ダグザヒゲシバ", "ペガサスの風景画"],
-  nuzzuo: ["ガルム"],
+  nuzzuo: ["ガルム", "ニーザ産ガルム", "薬草料理大全", "野外調理道具", "味わい深い調味料", "野菜の瓶漬け", "野菜の鉢植え", "盾たちの肖像画", "ペガサスの風景画", "ユ・ファスの肖像"],
+  kiroc: ["小粒のテフ", "大粒のテフ", "南方の薫るテフ", "テフ入り焼き菓子", "派手すぎる腕輪", "東方の耳飾り"],
   honghua: ["小粒のテフ", "大粒のテフ"],
   troy: ["子猫の置物"],
+};
+
+const classRecommendationsByCharacter: Record<
+  string,
+  { recommendedClass?: string; classPath?: string; sourceUrl: string }
+> = {
+  cai: { sourceUrl: "https://gamewith.jp/fefw/577325" },
+  tialla: { recommendedClass: "ワイズマン", classPath: "呪い師 → プリースト → ビショップ → ワイズマン", sourceUrl: "https://gamewith.jp/fefw/577321" },
+  peter: { recommendedClass: "マスターアーチ", classPath: "猟兵 → アーチャー → スナイパー → マスターアーチ", sourceUrl: "https://gamewith.jp/fefw/577320" },
+  ultand: { recommendedClass: "ホーリーランサー", classPath: "呪い師 → プリースト → ガーディアン → ホーリーランサー", sourceUrl: "https://gamewith.jp/fefw/577319" },
+  gaitz: { recommendedClass: "オリハルディア", classPath: "飛駝兵 → 騎甲駝兵 → バーディンガー → オリハルディア", sourceUrl: "https://gamewith.jp/fefw/577373" },
+  jester: { recommendedClass: "シャドーシーカー", classPath: "猟兵 → ローグ → シドー → シャドーシーカー", sourceUrl: "https://gamewith.jp/fefw/577290" },
+  goliath: { recommendedClass: "バトルマスター", classPath: "兵士 → 重装歩兵 → ヘヴィアーマー → バトルマスター", sourceUrl: "https://gamewith.jp/fefw/577291" },
+  dante: { recommendedClass: "ヴァルキュリウム", classPath: "呪い師 → シャーマン → トルバドール → ヴァルキュリウム", sourceUrl: "https://gamewith.jp/fefw/577305" },
+  dietrich: { recommendedClass: "ソードマスター", classPath: "猟兵 → 剣士 → シドー → ソードマスター", sourceUrl: "https://gamewith.jp/fefw/577324" },
+  fabio: { recommendedClass: "ドルイド", classPath: "呪い師 → シャーマン → ウァテス → ドルイド", sourceUrl: "https://gamewith.jp/fefw/577318" },
+  esmeralda: { recommendedClass: "フォートレス", classPath: "兵士 → 騎甲駝兵 → ヘヴィアーマー → フォートレス", sourceUrl: "https://gamewith.jp/fefw/577317" },
+  mikaela: { recommendedClass: "バトルマスター", classPath: "闘士 → ブリガンド → ウォーリアー → バトルマスター", sourceUrl: "https://gamewith.jp/fefw/577316" },
+  orchel: { recommendedClass: "ホーリーランサー", classPath: "ホーリーランサー", sourceUrl: "https://gamewith.jp/fefw/577374" },
+  diego: { recommendedClass: "マスターアーチ", classPath: "猟兵 → ローグ → フォレストナイト → マスターアーチ", sourceUrl: "https://gamewith.jp/fefw/577306" },
+  loretta: { recommendedClass: "聖天翼兵", classPath: "飛駝兵 → 騎甲駝兵 → シドー／カラドリオス → 聖天翼兵", sourceUrl: "https://gamewith.jp/fefw/577378" },
+  seteth: { recommendedClass: "グレートナイト", classPath: "兵士 → 軽騎兵 → カタフラクト → グレートナイト", sourceUrl: "https://gamewith.jp/fefw/577340" },
+  ninae: { recommendedClass: "ホーリーランサー", classPath: "兵士 → 騎甲駝兵 → ガーディアン → ホーリーランサー", sourceUrl: "https://gamewith.jp/fefw/577303" },
+  theodora: { recommendedClass: "ホーリーランサー", classPath: "兵士 → 重装歩兵 → ガーディアン → ホーリーランサー", sourceUrl: "https://gamewith.jp/fefw/577323" },
+  bonaventure: { recommendedClass: "ドルイド", classPath: "呪い師 → シャーマン → ウァテス → ドルイド", sourceUrl: "https://gamewith.jp/fefw/577315" },
+  tobias: { recommendedClass: "フォートレス", classPath: "兵士 → 重装歩兵 → ヘヴィアーマー → フォートレス", sourceUrl: "https://gamewith.jp/fefw/577313" },
+  lilian: { recommendedClass: "マスターアーチ", classPath: "猟兵 → アーチャー → スナイパー → マスターアーチ", sourceUrl: "https://gamewith.jp/fefw/577314" },
+  lysander: { recommendedClass: "オリハルディア", classPath: "飛駝兵 → 騎甲駝兵 → バーディンガー → オリハルディア", sourceUrl: "https://gamewith.jp/fefw/577312" },
+  talimun: { recommendedClass: "ドルイド", classPath: "呪い師 → シャーマン → ウァテス → ドルイド", sourceUrl: "https://gamewith.jp/fefw/577342" },
+  ursula: { recommendedClass: "シャドーシーカー", classPath: "猟兵 → ローグ → レンジャー → シャドーシーカー", sourceUrl: "https://gamewith.jp/fefw/577307" },
+  ludia: { recommendedClass: "聖天翼兵", classPath: "聖天翼兵", sourceUrl: "https://gamewith.jp/fefw/577289" },
+  simon: { recommendedClass: "バトルマスター", classPath: "闘士 → ブリガンド → ウォーリアー → バトルマスター", sourceUrl: "https://gamewith.jp/fefw/577304" },
+  fianna: { recommendedClass: "ウァテス", classPath: "ウァテス", sourceUrl: "https://gamewith.jp/fefw/577288" },
+  leda: { recommendedClass: "シャドーシーカー", classPath: "闘士 → ブリガンド → ウォーリアー → シャドーシーカー", sourceUrl: "https://gamewith.jp/fefw/577322" },
+  buccar: { recommendedClass: "フォートレス", classPath: "兵士 → 重装歩兵 → ヘヴィアーマー → フォートレス", sourceUrl: "https://gamewith.jp/fefw/577310" },
+  sirocco: { recommendedClass: "ハイエピタフ", classPath: "呪い師 → シャーマン → ウァテス → ハイエピタフ", sourceUrl: "https://gamewith.jp/fefw/577311" },
+  olympia: { recommendedClass: "ワイズマン", classPath: "呪い師 → プリースト → ビショップ → ワイズマン", sourceUrl: "https://gamewith.jp/fefw/577309" },
+  mu: { recommendedClass: "バトルマスター", classPath: "闘士 → ブリガンド → ウォーリアー → バトルマスター", sourceUrl: "https://gamewith.jp/fefw/577308" },
+  anatolia: { recommendedClass: "ドルイド", classPath: "ウァテス → ドルイド", sourceUrl: "https://gamewith.jp/fefw/577372" },
+  nezha: { recommendedClass: "ソードマスター", classPath: "闘士 → 剣士 → シドー → ソードマスター", sourceUrl: "https://gamewith.jp/fefw/577302" },
+  shalan: { recommendedClass: "ワイズマン", classPath: "呪い師 → プリースト → ビショップ → ワイズマン", sourceUrl: "https://gamewith.jp/fefw/577339" },
+  dadao: { recommendedClass: "フォートレス", classPath: "兵士 → 重装歩兵 → ヘヴィアーマー → フォートレス", sourceUrl: "https://gamewith.jp/fefw/577336" },
+  halvin: { recommendedClass: "ボウナイト", classPath: "闘士 → ブリガンド → フォレストナイト → ボウナイト", sourceUrl: "https://gamewith.jp/fefw/577341" },
+  guzran: { recommendedClass: "ソードマスター", classPath: "闘士 → 剣士 → シドー → ソードマスター", sourceUrl: "https://gamewith.jp/fefw/577301" },
+  yangjie: { recommendedClass: "ワイズマン", classPath: "呪い師 → プリースト → ビショップ → ワイズマン", sourceUrl: "https://gamewith.jp/fefw/577295" },
+  io: { recommendedClass: "オリハルディア", classPath: "軽騎兵 → バーディンガー → オリハルディア", sourceUrl: "https://gamewith.jp/fefw/577299" },
+  peppe: { recommendedClass: "シャドーシーカー", classPath: "猟兵 → ローグ → シドー → シャドーシーカー", sourceUrl: "https://gamewith.jp/fefw/577338" },
+  noctula: { recommendedClass: "バトルモンク", classPath: "バトルモンク", sourceUrl: "https://gamewith.jp/fefw/577296" },
+  sofia: { recommendedClass: "ワイズマン", classPath: "呪い師 → プリースト → ビショップ → ワイズマン", sourceUrl: "https://gamewith.jp/fefw/577294" },
+  catania: { recommendedClass: "聖天翼兵", classPath: "猟兵 → 剣士 → シドー → 聖天翼兵", sourceUrl: "https://gamewith.jp/fefw/577298" },
+  nydine: { recommendedClass: "ハイエピタフ", classPath: "飛駝兵 → ブリガンド → バーディンガー → ハイエピタフ", sourceUrl: "https://gamewith.jp/fefw/577300" },
+  zarcone: { recommendedClass: "バトルマスター", classPath: "闘士 → ブリガンド → ウォーリアー → バトルマスター", sourceUrl: "https://gamewith.jp/fefw/577292" },
+  majide: { recommendedClass: "バトルマスター", classPath: "闘士 → ブリガンド → ウォーリアー → バトルマスター", sourceUrl: "https://gamewith.jp/fefw/577293" },
+  benditz: { recommendedClass: "戦車兵", classPath: "戦車兵", sourceUrl: "https://gamewith.jp/fefw/577297" },
+  inyoni: { recommendedClass: "マスターアーチ", classPath: "アーチャー → スナイパー → マスターアーチ", sourceUrl: "https://gamewith.jp/fefw/577379" },
+  jasmine: { recommendedClass: "フォートレス", classPath: "兵士 → 重装歩兵 → ヘヴィアーマー → フォートレス", sourceUrl: "https://gamewith.jp/fefw/577383" },
+  alexandra: { recommendedClass: "ソードマスター", classPath: "ブリガンド → シドー → ソードマスター", sourceUrl: "https://gamewith.jp/fefw/577376" },
+  nuzzuo: { recommendedClass: "シャドーシーカー", classPath: "ローグ → スナイパー → シャドーシーカー", sourceUrl: "https://gamewith.jp/fefw/577380" },
+  kiroc: { recommendedClass: "シャドーシーカー", classPath: "猟兵 → ローグ → スナイパー → シャドーシーカー", sourceUrl: "https://gamewith.jp/fefw/577287" },
+  bertrand: { recommendedClass: "ソードマスター", classPath: "ウォーリアー → ソードマスター", sourceUrl: "https://gamewith.jp/fefw/577593" },
+  creek: { recommendedClass: "ソードマスター", classPath: "バーディンガー／シドー → ソードマスター", sourceUrl: "https://gamewith.jp/fefw/577615" },
+  nathan: { recommendedClass: "グレートナイト", classPath: "バーディンガー → グレートナイト", sourceUrl: "https://gamewith.jp/fefw/577895" },
+  centurio: { recommendedClass: "フォートレス", classPath: "重装歩兵 → ヘヴィアーマー → フォートレス", sourceUrl: "https://gamewith.jp/fefw/577381" },
+  honghua: { recommendedClass: "ドルイド", classPath: "ウァテス → ドルイド", sourceUrl: "https://gamewith.jp/fefw/577535" },
+  troy: { recommendedClass: "バトルモンク", classPath: "バトルモンク", sourceUrl: "https://gamewith.jp/fefw/577532" },
+  aswan: { recommendedClass: "マスターアーチ", classPath: "スナイパー → マスターアーチ", sourceUrl: "https://gamewith.jp/fefw/577918" },
+  tahonia: { recommendedClass: "バトルマスター", classPath: "バトルマスター", sourceUrl: "https://gamewith.jp/fefw/577917" },
+  klapka: { sourceUrl: "https://gamewith.jp/fefw/577935" },
 };
 
 export function getGiftDetails(gift: string): GiftDetails {
@@ -232,7 +306,7 @@ const baseCharacters: Character[] = [
     routes: { cai: auto("第6章"), dietrich: recruit(5, 3, "完成任务"), theodora: recruit(6, 3, "完成任务"), leda: recruit(8, 3, "完成任务") },
   },
   {
-    id: "gaitz", name: "盖兹", ja: "ガイツ", tier: 3,
+    id: "gaitz", name: "盖茨", ja: "ゲイツ", tier: 3,
     routes: { cai: unavailable(), dietrich: recruit(10, 3, "完成贝特朗外传，并等待其队伍出局", "约第12章"), theodora: unavailable(), leda: unavailable() },
   },
   {
@@ -407,7 +481,7 @@ const baseCharacters: Character[] = [
     routes: { cai: auto("招募教学"), dietrich: recruit(8, 3), theodora: recruit(8, 3), leda: recruit(3, 1) },
   },
   {
-    id: "yangjie", name: "杨界", ja: "ヤン・ジェ", role: "治疗支援",
+    id: "yangjie", name: "杨界", ja: "ヨーカイ", role: "治疗支援",
     routes: { cai: recruit(3, 2, "正确回答问题"), dietrich: auto("招募教学"), theodora: recruit(9, 3, "正确回答问题"), leda: recruit(8, 3, "正确回答问题") },
   },
   {
@@ -479,7 +553,7 @@ const baseCharacters: Character[] = [
     routes: { cai: recruit(6, 2, "铁弓 ×3", "约7月1日起出现"), dietrich: recruit(9, 1, "铁弓 ×2", "约7月1日起出现"), theodora: recruit(6, 1, "铁弓 ×3", "约7月1日起出现"), leda: recruit(9, 3, "铁弓 ×3", "约7月1日起出现") },
   },
   {
-    id: "kiroc", name: "基洛克", ja: "キリーク", tier: 2, role: "远程输出",
+    id: "kiroc", name: "基洛克", ja: "キロイカ", tier: 2, role: "远程输出",
     routes: { cai: recruit(8, 3, "纯净之水 ×8", "约5月4日起出现"), dietrich: recruit(4, 1, "纯净之水 ×3", "约5月4日起出现"), theodora: recruit(10, 3, "纯净之水 ×8", "约5月4日起出现"), leda: recruit(4, 1, "纯净之水 ×3", "约5月4日起出现") },
   },
   {
@@ -488,7 +562,7 @@ const baseCharacters: Character[] = [
     routes: { cai: later("第二部作为客军，第三部正式加入", "建议第一部完成其外传"), dietrich: later("第二部作为客军，第三部正式加入", "建议第一部完成其外传"), theodora: later("第二部作为客军，第三部正式加入", "建议第一部完成其外传"), leda: later("第二部作为客军，第三部正式加入", "建议第一部完成其外传") },
   },
   {
-    id: "creek", name: "克里克", ja: "クリーク", role: "后期加入",
+    id: "creek", name: "克里克", ja: "キリーク", role: "后期加入",
     routes: { cai: later("第二部·战争篇第2章", "第一部须完成支线“亡妹的装身具”，战场击败后加入"), dietrich: later("第二部·战争篇第2章", "第一部须完成支线“亡妹的装身具”，战场击败后加入"), theodora: later("第二部·战争篇第2章", "第一部须完成支线“亡妹的装身具”，战场击败后加入"), leda: later("第二部·战争篇第2章", "第一部须完成支线“亡妹的装身具”，战场击败后加入") },
   },
   {
@@ -529,6 +603,7 @@ const baseCharacters: Character[] = [
 
 export const characters: Character[] = baseCharacters.map((character) => ({
   ...character,
+  ...classRecommendationsByCharacter[character.id],
   gifts: favoriteGiftsByCharacter[character.id] ?? character.gifts,
 }));
 

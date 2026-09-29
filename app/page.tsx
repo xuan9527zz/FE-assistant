@@ -13,6 +13,7 @@ import {
   GraduationCap,
   Heart,
   Info,
+  LayoutDashboard,
   ListChecks,
   Route,
   Search,
@@ -49,6 +50,7 @@ import {
 } from "@/lib/game-data";
 
 type Plans = Record<RouteKey, string[]>;
+type WorkspaceTab = "planner" | "workbench" | "characters";
 
 const emptyPlans: Plans = { cai: [], dietrich: [], theodora: [], leda: [] };
 const storageKey = "fortunes-weave-recruitment-plans-v1";
@@ -76,6 +78,7 @@ function tierLabel(tier?: number) {
 }
 
 export default function Home() {
+  const [activeTab, setActiveTab] = useState<WorkspaceTab>("planner");
   const [route, setRoute] = useState<RouteKey>("leda");
   const [query, setQuery] = useState("");
   const [plans, setPlans] = useState<Plans>(emptyPlans);
@@ -254,17 +257,24 @@ export default function Home() {
         </div>
       </header>
 
-      <Tabs defaultValue="planner" className="workspace-tabs">
+      <Tabs
+        value={activeTab}
+        onValueChange={(value) => setActiveTab(value as WorkspaceTab)}
+        className="workspace-tabs"
+      >
         <div className="workspace-toolbar">
           <TabsList variant="line" aria-label="主要功能">
             <TabsTrigger value="planner">
               <Route />路线预组队
             </TabsTrigger>
+            <TabsTrigger value="workbench">
+              <LayoutDashboard />队伍工作台
+            </TabsTrigger>
             <TabsTrigger value="characters">
               <BookOpenText />角色图鉴
             </TabsTrigger>
           </TabsList>
-          <div className="data-note">已收录 {characters.length} 名角色 · 2026.09</div>
+          <div className="data-note">GameWith 数据核对至 2026.09.28</div>
         </div>
 
         <TabsContent value="planner" className="planner-layout">
@@ -389,6 +399,10 @@ export default function Home() {
               <span>{plannedCharacters.length}</span>
             </div>
             <p className="plan-intro">每条路线各存一份。先看到门槛，再决定把礼物、金钱和任务时间投给谁。</p>
+            <Button className="open-workbench" onClick={() => setActiveTab("workbench")}>
+              <LayoutDashboard />
+              打开队伍工作台
+            </Button>
 
             <div className="plan-list">
               {plannedCharacters.length ? (
@@ -422,6 +436,139 @@ export default function Home() {
               <strong>{selectedRoute.name}</strong>
             </div>
           </aside>
+        </TabsContent>
+
+        <TabsContent value="workbench" className="workbench-panel">
+          <div className="workbench-header">
+            <div>
+              <p className="eyebrow">{selectedRoute.name} · Team Workbench</p>
+              <h2>队伍工作台</h2>
+              <p>每位计划成员独占一列，把加入门槛、任务材料、转职路线与具体礼物放在同一张培养卡上。</p>
+            </div>
+            <div className="workbench-actions">
+              <div className="workbench-route-switcher" aria-label="切换工作台路线">
+                {routes.map((item) => (
+                  <button
+                    key={item.key}
+                    type="button"
+                    data-active={route === item.key}
+                    style={{ "--route-color": routeColor[item.key] } as React.CSSProperties}
+                    onClick={() => setRoute(item.key)}
+                  >
+                    <span aria-hidden="true" />
+                    {item.name}
+                    <small>{plans[item.key].length}</small>
+                  </button>
+                ))}
+              </div>
+              <Button variant="outline" onClick={() => setActiveTab("planner")}>
+                <ArrowLeft />返回选人
+              </Button>
+            </div>
+          </div>
+
+          {plannedCharacters.length ? (
+            <div className="workbench-board" aria-label={`${selectedRoute.name}队伍工作台`}>
+              {plannedCharacters.map((character, index) => {
+                const condition = character.routes[route];
+                const gifts = character.gifts?.map(getGiftDetails) ?? [];
+                const classSteps = character.classPath?.split(" → ").filter(Boolean) ?? [];
+
+                return (
+                  <article className="workbench-column" key={character.id}>
+                    <div className="workbench-column-accent" style={{ background: routeColor[route] }} />
+                    <header className="workbench-character-header">
+                      <span className="workbench-number">{String(index + 1).padStart(2, "0")}</span>
+                      <button type="button" onClick={() => setSelectedCharacter(character)}>
+                        <strong>{character.name}</strong>
+                        <small>{character.ja}</small>
+                      </button>
+                      {character.tier && <span className={`tier tier-${character.tier}`}>T{character.tier}</span>}
+                    </header>
+
+                    {character.role && <p className="workbench-role">{character.role}</p>}
+
+                    <section className="workbench-section">
+                      <div className="workbench-section-title"><ShieldCheck /><h3>加入条件</h3></div>
+                      <strong className="workbench-condition">{conditionLabel(condition)}</strong>
+                      <div className="requirement-badges">
+                        {condition.support !== undefined && <span>支援等级 {condition.support}</span>}
+                        {condition.renown !== undefined && <span>名声等级 {condition.renown}</span>}
+                        {condition.timing && <span>{condition.timing}</span>}
+                      </div>
+                      <div className="material-card">
+                        <small>{condition.status === "recruit" ? "任务／所需材料" : "加入方式"}</small>
+                        <strong>
+                          {condition.extra ??
+                            (condition.status === "recruit" ? "无额外任务或材料" : conditionLabel(condition))}
+                        </strong>
+                      </div>
+                    </section>
+
+                    {character.recommendedClass && (
+                      <section className="workbench-section">
+                        <div className="workbench-section-title"><GraduationCap /><h3>转职路线</h3></div>
+                        <div className="class-route" aria-label={`${character.name}的推荐转职路线`}>
+                          {classSteps.length ? classSteps.map((step, stepIndex) => (
+                            <div key={`${step}-${stepIndex}`}>
+                              <span>{step}</span>
+                              {stepIndex < classSteps.length - 1 && <ChevronRight aria-hidden="true" />}
+                            </div>
+                          )) : <div><span>{character.recommendedClass}</span></div>}
+                        </div>
+                        <p className="recommended-class">最终推荐：<strong>{character.recommendedClass}</strong></p>
+                      </section>
+                    )}
+
+                    {gifts.length ? (
+                      <section className="workbench-section workbench-gifts">
+                        <div className="workbench-section-title"><Gift /><h3>最喜欢的礼物</h3></div>
+                        <div className="workbench-gift-list">
+                          {gifts.map((gift, giftIndex) => {
+                            const content = (
+                              <>
+                                <span><strong>{gift.name}</strong>{gift.ja && <small>{gift.ja}</small>}</span>
+                                {gift.url && <ExternalLink aria-hidden="true" />}
+                              </>
+                            );
+                            return gift.url ? (
+                              <a key={`${gift.name}-${giftIndex}`} href={gift.url} target="_blank" rel="noreferrer">{content}</a>
+                            ) : (
+                              <div key={`${gift.name}-${giftIndex}`}>{content}</div>
+                            );
+                          })}
+                        </div>
+                      </section>
+                    ) : null}
+
+                    <footer className="workbench-column-footer">
+                      {character.sourceUrl && (
+                        <a href={character.sourceUrl} target="_blank" rel="noreferrer">
+                          GameWith 角色资料<ExternalLink aria-hidden="true" />
+                        </a>
+                      )}
+                      <button type="button" onClick={() => togglePlan(character.id)}>
+                        <X aria-hidden="true" />从本路线移除
+                      </button>
+                    </footer>
+                  </article>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="workbench-empty">
+              <LayoutDashboard aria-hidden="true" />
+              <h3>{selectedRoute.name}还没有计划成员</h3>
+              <p>先挑选本周目想招募和培养的角色，工作台会自动生成对应的纵向资料列。</p>
+              <Button onClick={() => setActiveTab("planner")}><CirclePlus />前往选择角色</Button>
+            </div>
+          )}
+
+          <div className="workbench-source-note">
+            <Info aria-hidden="true" />
+            <span>转职路线、加入条件与礼物喜好均据 GameWith 整理；兵种名保留日文原文，便于逐项核对。</span>
+            <a href={sources.gifts} target="_blank" rel="noreferrer">礼物喜好来源<ExternalLink /></a>
+          </div>
         </TabsContent>
 
         <TabsContent value="characters" className="atlas-panel">
@@ -555,7 +702,7 @@ function CharacterSheet({
                   <div className="recommendation-card">
                     <strong>{character.recommendedClass}</strong>
                     {character.classPath && <p>{character.classPath}</p>}
-                    <span>GameWith 攻略推荐</span>
+                    <span>GameWith 攻略推荐 · 兵种名保留日文原文</span>
                   </div>
                 </section>
               )}
@@ -606,6 +753,7 @@ function CharacterSheet({
               <section className="detail-section detail-sources">
                 <div className="detail-heading"><ExternalLink /><h3>资料来源</h3></div>
                 <div>
+                  {character.sourceUrl && <a href={character.sourceUrl} target="_blank" rel="noreferrer">本角色 GameWith 资料</a>}
                   <a href={sources.tiers} target="_blank" rel="noreferrer">角色梯度</a>
                   <a href={sources.gifts} target="_blank" rel="noreferrer">礼物喜好</a>
                   <a href={sources.recruitment} target="_blank" rel="noreferrer">招募条件</a>
