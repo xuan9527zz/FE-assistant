@@ -18,6 +18,8 @@ export type Character = {
   role?: string;
   recommendedClass?: string;
   classPath?: string;
+  recommendedClassJa?: string;
+  classPathJa?: string;
   sourceUrl?: string;
   gifts?: string[];
   likes?: string[];
@@ -270,6 +272,66 @@ const classRecommendationsByCharacter: Record<
   tahonia: { recommendedClass: "バトルマスター", classPath: "バトルマスター", sourceUrl: "https://gamewith.jp/fefw/577917" },
   klapka: { sourceUrl: "https://gamewith.jp/fefw/577935" },
 };
+
+const classNameTranslations: Record<string, string> = {
+  "兵士": "士兵",
+  "闘士": "斗士",
+  "飛駝兵": "飞鸵兵",
+  "猟兵": "猎兵",
+  "騎甲駝兵": "骑甲鸵兵",
+  "聖天翼兵": "圣天翼兵",
+  "戦車兵": "战车兵",
+  "軽騎兵": "轻骑兵",
+  "重装歩兵": "重装步兵",
+  "呪い師": "诅咒师",
+  "アーチャー": "弓箭手",
+  "ウァテス": "先知",
+  "ヴァルキュリウム": "瓦尔基里姆",
+  "ウォーリアー": "勇士",
+  "オリハルディア": "奥利哈铁骑",
+  "ガーディアン": "卫士",
+  "カタフラクト": "重装骑兵",
+  "カラドリオス": "神鸵兵",
+  "グレートナイト": "英勇骑士",
+  "シドー": "侍道",
+  "シャーマン": "萨满巫师",
+  "シャドーシーカー": "探影者",
+  "スナイパー": "狙击手",
+  "ソードマスター": "刀剑将领",
+  "ドルイド": "德鲁伊",
+  "トルバドール": "游唱诗人",
+  "バーディンガー": "荣光骑士",
+  "ハイエピタフ": "高阶墓志铭",
+  "バトルマスター": "战斗将领",
+  "バトルモンク": "武僧",
+  "ビショップ": "主教",
+  "フォートレス": "要塞",
+  "フォレストナイト": "森林骑士",
+  "プリースト": "牧师",
+  "ブリガンド": "土匪",
+  "ヘヴィアーマー": "巨型重甲兵",
+  "ホーリーランサー": "圣枪师",
+  "ボウナイト": "弓骑士",
+  "マスターアーチ": "宗师射手",
+  "レンジャー": "游侠",
+  "ローグ": "恶棍",
+  "ワイズマン": "贤士",
+  "剣士": "剑客",
+};
+
+function translateClassName(className: string) {
+  return className
+    .split("／")
+    .map((part) => classNameTranslations[part] ?? part)
+    .join("／");
+}
+
+function translateClassPath(classPath: string) {
+  return classPath
+    .split(" → ")
+    .map(translateClassName)
+    .join(" → ");
+}
 
 export function getGiftDetails(gift: string): GiftDetails {
   const details = giftCatalog[gift];
@@ -601,11 +663,21 @@ const baseCharacters: Character[] = [
   },
 ];
 
-export const characters: Character[] = baseCharacters.map((character) => ({
-  ...character,
-  ...classRecommendationsByCharacter[character.id],
-  gifts: favoriteGiftsByCharacter[character.id] ?? character.gifts,
-}));
+export const characters: Character[] = baseCharacters.map((character) => {
+  const recommendation = classRecommendationsByCharacter[character.id];
+  const recommendedClassJa = recommendation?.recommendedClass ?? character.recommendedClass;
+  const classPathJa = recommendation?.classPath ?? character.classPath;
+
+  return {
+    ...character,
+    sourceUrl: recommendation?.sourceUrl ?? character.sourceUrl,
+    recommendedClassJa,
+    classPathJa,
+    recommendedClass: recommendedClassJa ? translateClassName(recommendedClassJa) : undefined,
+    classPath: classPathJa ? translateClassPath(classPathJa) : undefined,
+    gifts: favoriteGiftsByCharacter[character.id] ?? character.gifts,
+  };
+});
 
 export const sources = {
   official: "https://www.nintendo.com/tw/topics/article/3feXfpwDoBpKurVdEuTygE",
@@ -613,6 +685,8 @@ export const sources = {
   gifts: "https://gamewith.jp/fefw/577115",
   recruitment: "https://www.rpgsite.net/guide/21391-fire-emblem-fortunes-weave-recruitment-guide-all-characters-in-game-how-to-recruit-them",
   chineseNames: "https://www.gamersky.com/handbook/202609/2211429.shtml",
+  chineseClasses: "https://fire-emblem-fw.site/classes.html",
+  classes: "https://gamewith.jp/fefw/575722",
 };
 
 export function conditionLabel(condition: RouteCondition) {

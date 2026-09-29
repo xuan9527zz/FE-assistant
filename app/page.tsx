@@ -473,6 +473,7 @@ export default function Home() {
                 const condition = character.routes[route];
                 const gifts = character.gifts?.map(getGiftDetails) ?? [];
                 const classSteps = character.classPath?.split(" → ").filter(Boolean) ?? [];
+                const classStepsJa = character.classPathJa?.split(" → ").filter(Boolean) ?? [];
 
                 return (
                   <article className="workbench-column" key={character.id}>
@@ -511,12 +512,18 @@ export default function Home() {
                         <div className="class-route" aria-label={`${character.name}的推荐转职路线`}>
                           {classSteps.length ? classSteps.map((step, stepIndex) => (
                             <div key={`${step}-${stepIndex}`}>
-                              <span>{step}</span>
+                              <span>
+                                <strong>{step}</strong>
+                                {classStepsJa[stepIndex] && <small>{classStepsJa[stepIndex]}</small>}
+                              </span>
                               {stepIndex < classSteps.length - 1 && <ChevronRight aria-hidden="true" />}
                             </div>
                           )) : <div><span>{character.recommendedClass}</span></div>}
                         </div>
-                        <p className="recommended-class">最终推荐：<strong>{character.recommendedClass}</strong></p>
+                        <p className="recommended-class">
+                          最终推荐：<strong>{character.recommendedClass}</strong>
+                          {character.recommendedClassJa && <small>{character.recommendedClassJa}</small>}
+                        </p>
                       </section>
                     )}
 
@@ -566,8 +573,11 @@ export default function Home() {
 
           <div className="workbench-source-note">
             <Info aria-hidden="true" />
-            <span>转职路线、加入条件与礼物喜好均据 GameWith 整理；兵种名保留日文原文，便于逐项核对。</span>
-            <a href={sources.gifts} target="_blank" rel="noreferrer">礼物喜好来源<ExternalLink /></a>
+            <span>转职路线、加入条件与礼物喜好均据 GameWith 整理；兵种显示简体中文名，并在下方保留日文原文。</span>
+            <div>
+              <a href={sources.chineseClasses} target="_blank" rel="noreferrer">简中兵种对照<ExternalLink /></a>
+              <a href={sources.gifts} target="_blank" rel="noreferrer">礼物喜好来源<ExternalLink /></a>
+            </div>
           </div>
         </TabsContent>
 
@@ -702,7 +712,8 @@ function CharacterSheet({
                   <div className="recommendation-card">
                     <strong>{character.recommendedClass}</strong>
                     {character.classPath && <p>{character.classPath}</p>}
-                    <span>GameWith 攻略推荐 · 兵种名保留日文原文</span>
+                    {character.classPathJa && <small>{character.classPathJa}</small>}
+                    <span>GameWith 攻略推荐 · 简体中文名优先</span>
                   </div>
                 </section>
               )}
@@ -754,6 +765,7 @@ function CharacterSheet({
                 <div className="detail-heading"><ExternalLink /><h3>资料来源</h3></div>
                 <div>
                   {character.sourceUrl && <a href={character.sourceUrl} target="_blank" rel="noreferrer">本角色 GameWith 资料</a>}
+                  <a href={sources.chineseClasses} target="_blank" rel="noreferrer">简中兵种对照</a>
                   <a href={sources.tiers} target="_blank" rel="noreferrer">角色梯度</a>
                   <a href={sources.gifts} target="_blank" rel="noreferrer">礼物喜好</a>
                   <a href={sources.recruitment} target="_blank" rel="noreferrer">招募条件</a>
