@@ -13,7 +13,6 @@ import {
   Gift,
   GraduationCap,
   Heart,
-  Info,
   LayoutDashboard,
   ListChecks,
   Route,
@@ -45,7 +44,6 @@ import {
   isFastestRoute,
   routeColor,
   routes,
-  sources,
   type Character,
   type RouteKey,
 } from "@/lib/game-data";
@@ -275,7 +273,7 @@ export default function Home() {
               <BookOpenText />角色图鉴
             </TabsTrigger>
           </TabsList>
-          <div className="data-note">GameWith / Game8 数据核对至 2026.09.29</div>
+          <div className="data-note">{characters.length} 名角色 · 192 条白鸦答案</div>
         </div>
 
         <TabsContent value="planner" className="planner-layout">
@@ -550,11 +548,6 @@ export default function Home() {
                     ) : null}
 
                     <footer className="workbench-column-footer">
-                      {character.sourceUrl && (
-                        <a href={character.sourceUrl} target="_blank" rel="noreferrer">
-                          GameWith 角色资料<ExternalLink aria-hidden="true" />
-                        </a>
-                      )}
                       <button type="button" onClick={() => togglePlan(character.id)}>
                         <X aria-hidden="true" />从本路线移除
                       </button>
@@ -572,14 +565,6 @@ export default function Home() {
             </div>
           )}
 
-          <div className="workbench-source-note">
-            <Info aria-hidden="true" />
-            <span>转职路线、加入条件与礼物喜好均据 GameWith 整理；兵种显示简体中文名，并在下方保留日文原文。</span>
-            <div>
-              <a href={sources.chineseClasses} target="_blank" rel="noreferrer">简中兵种对照<ExternalLink /></a>
-              <a href={sources.gifts} target="_blank" rel="noreferrer">礼物喜好来源<ExternalLink /></a>
-            </div>
-          </div>
         </TabsContent>
 
         <TabsContent value="characters" className="atlas-panel">
@@ -622,10 +607,6 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="source-note">
-            <Info />
-            <p>角色梯度来自 GameWith；白鸦答案来自 Game8，仅收录其已经确认的答案。中文译名以简体中文版游戏为优先，仍有异译时保留日文原文便于核对。</p>
-          </div>
         </TabsContent>
       </Tabs>
 
@@ -715,7 +696,7 @@ function CharacterSheet({
                     <strong>{character.recommendedClass}</strong>
                     {character.classPath && <p>{character.classPath}</p>}
                     {character.classPathJa && <small>{character.classPathJa}</small>}
-                    <span>GameWith 攻略推荐 · 简体中文名优先</span>
+                    <span>推荐转职终点 · 简体中文名优先</span>
                   </div>
                 </section>
               )}
@@ -756,26 +737,21 @@ function CharacterSheet({
                     <h3>白鸦羁绊选项</h3>
                     <span className="detail-count">{character.whiteRaven.choices.length} 条</span>
                   </div>
-                  <p className="raven-note">中文为日文台词释义；只收录 Game8 已确认的答案，“调查中”内容不显示。</p>
+                  <p className="raven-note">仅显示已经确认的正确反应，未确认内容不收录。</p>
                   <div className="raven-choice-list">
                     {character.whiteRaven.choices.map((choice, index) => (
-                      <article key={`${choice.promptJa}-${index}`}>
+                      <article key={`${choice.prompt}-${index}`}>
                         <span className="raven-choice-index">{String(index + 1).padStart(2, "0")}</span>
                         <div>
                           <p>{choice.prompt}</p>
-                          <small>{choice.promptJa}</small>
                           <div className="raven-answer">
                             <span>正确反应</span>
                             <strong>{choice.answer}</strong>
-                            <small>{choice.answerJa}</small>
                           </div>
                         </div>
                       </article>
                     ))}
                   </div>
-                  <a className="raven-source" href={character.whiteRaven.sourceUrl} target="_blank" rel="noreferrer">
-                    查看 Game8 本角色原始资料<ExternalLink aria-hidden="true" />
-                  </a>
                 </section>
               ) : null}
 
@@ -793,17 +769,6 @@ function CharacterSheet({
                 </section>
               ) : null}
 
-              <section className="detail-section detail-sources">
-                <div className="detail-heading"><ExternalLink /><h3>资料来源</h3></div>
-                <div>
-                  {character.sourceUrl && <a href={character.sourceUrl} target="_blank" rel="noreferrer">本角色 GameWith 资料</a>}
-                  {character.whiteRaven && <a href={character.whiteRaven.sourceUrl} target="_blank" rel="noreferrer">本角色 Game8 白鸦资料</a>}
-                  <a href={sources.chineseClasses} target="_blank" rel="noreferrer">简中兵种对照</a>
-                  <a href={sources.tiers} target="_blank" rel="noreferrer">角色梯度</a>
-                  <a href={sources.gifts} target="_blank" rel="noreferrer">礼物喜好</a>
-                  <a href={sources.recruitment} target="_blank" rel="noreferrer">招募条件</a>
-                </div>
-              </section>
             </div>
 
             <SheetFooter className="sheet-actions">
