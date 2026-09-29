@@ -37,7 +37,9 @@ jobs:
         env:
           GITHUB_PAGES: "true"
           NEXT_PUBLIC_BASE_PATH: /FE-assistant
-        run: npx next build
+        run: |
+          npx next build
+          node scripts/build-pwa.mjs
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4

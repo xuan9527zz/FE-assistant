@@ -4,7 +4,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
-  Bird,
   BookOpenText,
   Check,
   ChevronRight,
@@ -300,7 +299,7 @@ export default function Home() {
               <BookOpenText />角色图鉴
             </TabsTrigger>
           </TabsList>
-          <div className="data-note">{characters.length} 名角色 · 192 条白鸦答案</div>
+          <div className="data-note">{characters.length} 名角色 · 4 条路线</div>
         </div>
 
         <TabsContent value="planner" className="planner-layout">
@@ -617,7 +616,6 @@ export default function Home() {
           <div className="atlas-stats" aria-label="资料概览">
             <div><Users /><strong>{characters.length}</strong><span>角色档案</span></div>
             <div><Gift /><strong>{characters.filter((character) => character.gifts?.length).length}</strong><span>已确认礼物</span></div>
-            <div><Bird /><strong>{characters.filter((character) => character.whiteRaven?.choices.length).length}</strong><span>白鸦答案</span></div>
             <div><ListChecks /><strong>4</strong><span>路线条件</span></div>
           </div>
 
@@ -755,31 +753,6 @@ function CharacterSheet({
                         <div key={gift} className="gift-card">{content}</div>
                       );
                     })}
-                  </div>
-                </section>
-              ) : null}
-
-              {character.whiteRaven?.choices.length ? (
-                <section className="detail-section">
-                  <div className="detail-heading">
-                    <Bird />
-                    <h3>白鸦羁绊选项</h3>
-                    <span className="detail-count">{character.whiteRaven.choices.length} 条</span>
-                  </div>
-                  <p className="raven-note">仅显示已经确认的正确反应，未确认内容不收录。</p>
-                  <div className="raven-choice-list">
-                    {character.whiteRaven.choices.map((choice, index) => (
-                      <article key={`${choice.prompt}-${index}`}>
-                        <span className="raven-choice-index">{String(index + 1).padStart(2, "0")}</span>
-                        <div>
-                          <p>{choice.prompt}</p>
-                          <div className="raven-answer">
-                            <span>正确反应</span>
-                            <strong>{choice.answer}</strong>
-                          </div>
-                        </div>
-                      </article>
-                    ))}
                   </div>
                 </section>
               ) : null}

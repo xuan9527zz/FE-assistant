@@ -1,10 +1,6 @@
-import {
-  game8WhiteRavenByCharacter,
-  type WhiteRavenChoice,
-} from "@/lib/game8-white-raven";
-import { gameWithAvatarByCharacter } from "@/lib/gamewith-avatars";
-
 export type RouteKey = "cai" | "dietrich" | "theodora" | "leda";
+
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 export type JoinStatus = "initial" | "auto" | "recruit" | "later" | "unavailable";
 
@@ -31,10 +27,6 @@ export type Character = {
   gifts?: string[];
   likes?: string[];
   dislikes?: string[];
-  whiteRaven?: {
-    sourceUrl: string;
-    choices: WhiteRavenChoice[];
-  };
   routes: Record<RouteKey, RouteCondition>;
 };
 
@@ -681,14 +673,13 @@ export const characters: Character[] = baseCharacters.map((character) => {
 
   return {
     ...character,
-    avatarUrl: gameWithAvatarByCharacter[character.id],
+    avatarUrl: `${basePath}/avatars/${character.id}.webp`,
     sourceUrl: recommendation?.sourceUrl ?? character.sourceUrl,
     recommendedClassJa,
     classPathJa,
     recommendedClass: recommendedClassJa ? translateClassName(recommendedClassJa) : undefined,
     classPath: classPathJa ? translateClassPath(classPathJa) : undefined,
     gifts: favoriteGiftsByCharacter[character.id] ?? character.gifts,
-    whiteRaven: game8WhiteRavenByCharacter[character.id],
   };
 });
 
@@ -700,7 +691,6 @@ export const sources = {
   chineseNames: "https://www.gamersky.com/handbook/202609/2211429.shtml",
   chineseClasses: "https://fire-emblem-fw.site/classes.html",
   classes: "https://gamewith.jp/fefw/575722",
-  game8: "https://game8.jp/fe-banshisenko",
 };
 
 export function conditionLabel(condition: RouteCondition) {
