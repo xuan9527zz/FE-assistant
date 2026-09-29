@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
+  Bird,
   BookOpenText,
   Check,
   ChevronRight,
@@ -274,7 +275,7 @@ export default function Home() {
               <BookOpenText />角色图鉴
             </TabsTrigger>
           </TabsList>
-          <div className="data-note">GameWith 数据核对至 2026.09.28</div>
+          <div className="data-note">GameWith / Game8 数据核对至 2026.09.29</div>
         </div>
 
         <TabsContent value="planner" className="planner-layout">
@@ -602,6 +603,7 @@ export default function Home() {
           <div className="atlas-stats" aria-label="资料概览">
             <div><Users /><strong>{characters.length}</strong><span>角色档案</span></div>
             <div><Gift /><strong>{characters.filter((character) => character.gifts?.length).length}</strong><span>已确认礼物</span></div>
+            <div><Bird /><strong>{characters.filter((character) => character.whiteRaven?.choices.length).length}</strong><span>白鸦答案</span></div>
             <div><ListChecks /><strong>4</strong><span>路线条件</span></div>
           </div>
 
@@ -622,7 +624,7 @@ export default function Home() {
 
           <div className="source-note">
             <Info />
-            <p>角色梯度为 GameWith 攻略评价，并非官方强度结论；中文译名以简体中文版游戏为优先，仍有异译时保留日文原名便于核对。</p>
+            <p>角色梯度来自 GameWith；白鸦答案来自 Game8，仅收录其已经确认的答案。中文译名以简体中文版游戏为优先，仍有异译时保留日文原文便于核对。</p>
           </div>
         </TabsContent>
       </Tabs>
@@ -747,6 +749,36 @@ function CharacterSheet({
                 </section>
               ) : null}
 
+              {character.whiteRaven?.choices.length ? (
+                <section className="detail-section">
+                  <div className="detail-heading">
+                    <Bird />
+                    <h3>白鸦羁绊选项</h3>
+                    <span className="detail-count">{character.whiteRaven.choices.length} 条</span>
+                  </div>
+                  <p className="raven-note">中文为日文台词释义；只收录 Game8 已确认的答案，“调查中”内容不显示。</p>
+                  <div className="raven-choice-list">
+                    {character.whiteRaven.choices.map((choice, index) => (
+                      <article key={`${choice.promptJa}-${index}`}>
+                        <span className="raven-choice-index">{String(index + 1).padStart(2, "0")}</span>
+                        <div>
+                          <p>{choice.prompt}</p>
+                          <small>{choice.promptJa}</small>
+                          <div className="raven-answer">
+                            <span>正确反应</span>
+                            <strong>{choice.answer}</strong>
+                            <small>{choice.answerJa}</small>
+                          </div>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                  <a className="raven-source" href={character.whiteRaven.sourceUrl} target="_blank" rel="noreferrer">
+                    查看 Game8 本角色原始资料<ExternalLink aria-hidden="true" />
+                  </a>
+                </section>
+              ) : null}
+
               {(character.likes?.length || character.dislikes?.length) ? (
                 <section className="detail-section">
                   <div className="detail-heading"><Heart /><h3>喜好</h3></div>
@@ -765,6 +797,7 @@ function CharacterSheet({
                 <div className="detail-heading"><ExternalLink /><h3>资料来源</h3></div>
                 <div>
                   {character.sourceUrl && <a href={character.sourceUrl} target="_blank" rel="noreferrer">本角色 GameWith 资料</a>}
+                  {character.whiteRaven && <a href={character.whiteRaven.sourceUrl} target="_blank" rel="noreferrer">本角色 Game8 白鸦资料</a>}
                   <a href={sources.chineseClasses} target="_blank" rel="noreferrer">简中兵种对照</a>
                   <a href={sources.tiers} target="_blank" rel="noreferrer">角色梯度</a>
                   <a href={sources.gifts} target="_blank" rel="noreferrer">礼物喜好</a>
