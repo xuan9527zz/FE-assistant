@@ -2,6 +2,7 @@ import {
   game8WhiteRavenByCharacter,
   type WhiteRavenChoice,
 } from "@/lib/game8-white-raven";
+import { gameWithAvatarByCharacter } from "@/lib/gamewith-avatars";
 
 export type RouteKey = "cai" | "dietrich" | "theodora" | "leda";
 
@@ -19,6 +20,7 @@ export type Character = {
   id: string;
   name: string;
   ja: string;
+  avatarUrl?: string;
   tier?: 1 | 2 | 3 | 4 | 5;
   role?: string;
   recommendedClass?: string;
@@ -679,6 +681,7 @@ export const characters: Character[] = baseCharacters.map((character) => {
 
   return {
     ...character,
+    avatarUrl: gameWithAvatarByCharacter[character.id],
     sourceUrl: recommendation?.sourceUrl ?? character.sourceUrl,
     recommendedClassJa,
     classPathJa,

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -74,6 +75,32 @@ function nextPaint() {
 
 function tierLabel(tier?: number) {
   return tier ? `Tier ${tier}` : "暂未评级";
+}
+
+function CharacterPortrait({
+  character,
+  className,
+  eager = false,
+}: {
+  character: Character;
+  className: string;
+  eager?: boolean;
+}) {
+  if (!character.avatarUrl) {
+    return <span className={className} aria-hidden="true">{character.name.slice(0, 1)}</span>;
+  }
+
+  return (
+    <img
+      className={className}
+      src={character.avatarUrl}
+      alt=""
+      aria-hidden="true"
+      loading={eager ? "eager" : "lazy"}
+      decoding="async"
+      referrerPolicy="no-referrer"
+    />
+  );
 }
 
 export default function Home() {
@@ -354,7 +381,7 @@ export default function Home() {
                       aria-label={`查看${character.name}的个人资料`}
                       onClick={() => setSelectedCharacter(character)}
                     >
-                      {character.name.slice(0, 1)}
+                      <CharacterPortrait character={character} className="character-monogram-image" />
                     </button>
                     <div className="character-copy">
                       <button className="character-name-button" onClick={() => setSelectedCharacter(character)}>
@@ -410,6 +437,7 @@ export default function Home() {
                   return (
                     <div className="plan-item" key={character.id}>
                       <span className="plan-index">{String(index + 1).padStart(2, "0")}</span>
+                      <CharacterPortrait character={character} className="plan-avatar" />
                       <button className="plan-character-button" onClick={() => setSelectedCharacter(character)}>
                         <strong>{character.name}</strong>
                         <span>{conditionLabel(condition)}</span>
@@ -479,6 +507,7 @@ export default function Home() {
                     <div className="workbench-column-accent" style={{ background: routeColor[route] }} />
                     <header className="workbench-character-header">
                       <span className="workbench-number">{String(index + 1).padStart(2, "0")}</span>
+                      <CharacterPortrait character={character} className="workbench-avatar" />
                       <button type="button" onClick={() => setSelectedCharacter(character)}>
                         <strong>{character.name}</strong>
                         <small>{character.ja}</small>
@@ -595,7 +624,7 @@ export default function Home() {
           <div className="atlas-grid">
             {visibleCharacters.map((character) => (
               <button key={character.id} onClick={() => setSelectedCharacter(character)}>
-                <span className="atlas-monogram">{character.name.slice(0, 1)}</span>
+                <CharacterPortrait character={character} className="atlas-monogram" />
                 <span className="atlas-copy">
                   <strong>{character.name}</strong>
                   <small>{character.ja}</small>
@@ -657,7 +686,7 @@ function CharacterSheet({
             </Button>
 
             <SheetHeader className="sheet-hero">
-              <div className="sheet-monogram" aria-hidden="true">{character.name.slice(0, 1)}</div>
+              <CharacterPortrait character={character} className="sheet-monogram" eager />
               <div>
                 <p className="eyebrow">{tierLabel(character.tier)}</p>
                 <SheetTitle>{character.name}</SheetTitle>
