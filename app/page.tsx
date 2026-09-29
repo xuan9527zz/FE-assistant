@@ -15,6 +15,7 @@ import {
   Heart,
   LayoutDashboard,
   ListChecks,
+  MessageCircle,
   Route,
   Search,
   ShieldCheck,
@@ -36,6 +37,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { SupportConversations } from "@/components/support-conversations";
 import {
   characters,
   conditionLabel,
@@ -49,7 +51,7 @@ import {
 } from "@/lib/game-data";
 
 type Plans = Record<RouteKey, string[]>;
-type WorkspaceTab = "planner" | "workbench" | "characters";
+type WorkspaceTab = "planner" | "workbench" | "characters" | "support";
 
 const emptyPlans: Plans = { cai: [], dietrich: [], theodora: [], leda: [] };
 const storageKey = "fortunes-weave-recruitment-plans-v1";
@@ -297,6 +299,9 @@ export default function Home() {
             </TabsTrigger>
             <TabsTrigger value="characters">
               <BookOpenText />角色图鉴
+            </TabsTrigger>
+            <TabsTrigger value="support">
+              <MessageCircle />支援对话
             </TabsTrigger>
           </TabsList>
           <div className="data-note">{characters.length} 名角色 · 4 条路线</div>
@@ -634,6 +639,13 @@ export default function Home() {
             ))}
           </div>
 
+        </TabsContent>
+        <TabsContent value="support">
+          <SupportConversations
+            plannedIds={currentPlan}
+            routeName={selectedRoute.name}
+            onOpenPlanner={() => setActiveTab("planner")}
+          />
         </TabsContent>
       </Tabs>
 
